@@ -2,16 +2,24 @@ import { useState } from "react";
 import { useEffect } from "react";
 import "./App.css";
 import Artist from "./components/Artist";
+import Data from "./data";
+import { pri } from "./data";
 
 function App() {
+  let [cel, setCel] = useState("beyonce");
   let [current, setCurrent] = useState("beyonce");
+  let [datas, setdatas] = useState(pri);
+  useEffect(() => {
+    setdatas(Data.artists.filter((elt) => elt.id === current));
+  }, [current]);
+  function searcher() {
+    setCurrent(cel);
+  }
 
-  useEffect(
-    function () {
-      fetch("./components/data.json").then((data) => console.log(data));
-    },
-    [current]
-  );
+  function cele(e) {
+    setCel(e.target.value);
+  }
+
   return (
     <section className="w-full h-screen px-[7%] py-8">
       <section className="flex justify-between items-center">
@@ -24,7 +32,11 @@ function App() {
           <p className="font-serif font-bold text-black text-2xl">Musicx</p>
         </div>
         <div className="flex items-center gap-4">
-          <select className="w-[35rem] px-4 py-2 font-serif font-bold rounded-xl">
+          <select
+            className="w-[35rem] px-4 py-2 font-serif font-bold rounded-xl"
+            value={cel}
+            onChange={cele}
+          >
             <option className="h-48" value="beyonce">
               beyonce
             </option>
@@ -56,12 +68,15 @@ function App() {
               The weeknd
             </option>
           </select>
-          <button className="shadow-inner shadow-blue-500 px-5 py-1 font-bold font-serif bg-blue-100 rounded-lg">
+          <button
+            onClick={searcher}
+            className="shadow-inner shadow-blue-500 px-5 py-1 font-bold font-serif bg-blue-100 rounded-lg"
+          >
             Search
           </button>
         </div>
       </section>
-      <Artist />
+      <Artist dataa={datas} />
     </section>
   );
 }
